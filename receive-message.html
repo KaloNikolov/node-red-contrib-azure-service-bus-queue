@@ -1,0 +1,36 @@
+<script type="text/javascript">
+    RED.nodes.registerType('receive-message',{
+        category: 'Azure',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            queue: {value:""},
+            connectionString: {value:""}
+        },
+        inputs:0,
+        outputs:1,
+        icon: "arrow-in.png",
+        label: function() {
+            return this.name||"receive-message";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="receive-message">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-queue"><i class="icon-tag"></i> Queue</label>
+        <input type="text" id="node-input-queue" placeholder="Queue">
+    </div>
+    <div class="form-row">
+        <label for="node-input-connectionString"><i class="icon-tag"></i> ConnectionString</label>
+        <input type="text" id="node-input-connectionString" placeholder="connectionString">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="receive-message">
+    <p>A simple node that converts the message payloads into all lower-case characters</p>
+</script>
