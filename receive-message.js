@@ -16,8 +16,11 @@ module.exports = function(RED) {
                         node.status({ fill: "yellow", shape: "ring", text: "error received, see debug or output" });
                     }
                 } else {
-                    //console.log(receivedMessage.body);
-                    var msg = JSON.parse(receivedMessage.body);
+                    var msg = receivedMessage.body;
+                    try{
+                        msg = JSON.parse(msg);
+                    } catch(err) {}
+                    
                     node.status({ fill: "green", shape: "ring", text: "got a message" });
                     node.send({payload: msg});
                 }
