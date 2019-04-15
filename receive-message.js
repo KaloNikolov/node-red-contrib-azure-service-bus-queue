@@ -5,9 +5,28 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,config);
         var node = this;
 
+        var d = new Date().toISOString();
+        node.log("receive-message node created.");
+
         var serviceBusService = azure.createServiceBusService(config.connectionString);
 
+        var state = { isClosed: false };
+
+        node.on("close", function(done) {
+            node.log("Closing " + d + " - " + node.id);
+            state.isClosed = true;
+            done();
+        });
+
         var checkForMessage = function() {
+
+            node.log("Waiting for Message " + d);
+
+            if(state.isClosed){
+                node.log("Exiting... " + d);
+                return;
+            }
+
             node.status({});
             serviceBusService.receiveQueueMessage(config.queue, {timeoutIntervalInS: 180}, function(error, receivedMessage){
                 if(error){
@@ -27,7 +46,12 @@ module.exports = function(RED) {
                 checkForMessage();
             });
         }
-        checkForMessage();
+
+        if(!node.listen)
+        {
+            node.listen = true;        
+            checkForMessage();
+        }
     }
     RED.nodes.registerType("receive-message",ReceiveMessage);
 }
