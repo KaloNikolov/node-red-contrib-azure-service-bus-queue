@@ -41,7 +41,10 @@ module.exports = function(RED) {
                     } catch(err) {}
                     
                     node.status({ fill: "green", shape: "ring", text: "got a message" });
-                    node.send({payload: msg});
+                    node.send({
+						payload: msg, 
+						brokerProperties: receivedMessage.brokerProperties
+					});
                 }
                 checkForMessage();
             });
