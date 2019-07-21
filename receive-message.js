@@ -36,15 +36,19 @@ module.exports = function(RED) {
                     }
                 } else {
                     var msg = receivedMessage.body;
+                    
+                    var enqueueTime = new Date(msg.brokerProperties.EnqueuedTimeUtc);
+                    msg.brokerProperties.EnqueuedTimeUtc = enqueueTime;
+
                     try{
                         msg = JSON.parse(msg);
                     } catch(err) {}
                     
                     node.status({ fill: "green", shape: "ring", text: "got a message" });
                     node.send({
-			payload: msg, 
-			brokerProperties: receivedMessage.brokerProperties
-		    });
+                        payload: msg,
+                        brokerProperties: receivedMessage.brokerProperties
+                    });
                 }
                 checkForMessage();
             });
