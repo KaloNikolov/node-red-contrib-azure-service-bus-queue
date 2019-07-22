@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-azure-service-bus-queue",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Sends and receives queue messages from Azure Service Bus Queues",
   "main": "post-message.js",
   "scripts": {
