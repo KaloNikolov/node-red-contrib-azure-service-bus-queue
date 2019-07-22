@@ -37,8 +37,8 @@ module.exports = function(RED) {
                 } else {
                     var msg = receivedMessage.body;
                     
-                    var enqueueTime = new Date(msg.brokerProperties.EnqueuedTimeUtc);
-                    msg.brokerProperties.EnqueuedTimeUtc = enqueueTime;
+                    var enqueueTime = new Date(receivedMessage.brokerProperties.EnqueuedTimeUtc);
+                    receivedMessage.brokerProperties.EnqueuedTimeUtc = enqueueTime;
 
                     try{
                         msg = JSON.parse(msg);
