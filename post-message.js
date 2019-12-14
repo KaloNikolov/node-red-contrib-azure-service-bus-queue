@@ -10,7 +10,15 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
             var msgString = JSON.stringify(msg.payload);
 
-            serviceBusService.sendQueueMessage(config.queue, msgString, function(err, msgRes){});
+            serviceBusService.sendQueueMessage(config.queue, msgString, function(err, msgRes){
+                if(err){
+                    node.status({ fill: "red", shape: "ring", text: "error, see debug or output" });
+                    node.error(err);
+                } else {
+                    node.status({ fill: "blue", shape: "ring", text: "sent a message" });
+                    setTimeout(()=>{ node.status({}); }, 2000);
+                }
+            });
 
             node.send(msg);
         });

@@ -27,12 +27,16 @@ module.exports = function(RED) {
                 return;
             }
 
-            node.status({});
             serviceBusService.receiveQueueMessage(config.queue, {timeoutIntervalInS: 180}, function(error, receivedMessage){
                 if(error){
-                    if(error !== "No messages to receive") {
+                    if(error == "No messages to receive") {
+                        node.status({ fill: "green", shape: "dot", text: "connected" });
+                        checkForMessage();
+                    } else {
                         node.error(error);
-                        node.status({ fill: "yellow", shape: "ring", text: "error received, see debug or output" });
+                        node.status({ fill: "red", shape: "ring", text: "error, see debug or output" });
+
+                        setTimeout(checkForMessage, 60000);
                     }
                 } else {
                     var msg = receivedMessage.body;
@@ -44,13 +48,16 @@ module.exports = function(RED) {
                         msg = JSON.parse(msg);
                     } catch(err) {}
                     
-                    node.status({ fill: "green", shape: "ring", text: "got a message" });
+                    node.status({ fill: "blue", shape: "ring", text: "got a message" });
                     node.send({
                         payload: msg,
                         brokerProperties: receivedMessage.brokerProperties
                     });
+
+                    setTimeout(()=>{ node.status({ fill: "green", shape: "dot", text: "connected" }); }, 2000);
+
+                    checkForMessage();
                 }
-                checkForMessage();
             });
         }
 
